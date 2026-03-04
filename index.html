@@ -1,0 +1,131 @@
+<!DOCTYPE html><html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeonSound Studios | FL Studio Packs</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif}
+body{background:#0f0f1a;color:white}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 40px;background:#111122;border-bottom:1px solid #222}
+.logo{font-size:22px;font-weight:800;background:linear-gradient(90deg,#00f5ff,#ff00cc);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+nav a{margin-left:20px;color:white;text-decoration:none}
+.hero{padding:90px 20px;text-align:center;background:linear-gradient(45deg,#111122,#1b1b2f)}
+.hero h1{font-size:40px;margin-bottom:15px}
+.btn{padding:12px 22px;border:none;border-radius:25px;cursor:pointer;background:linear-gradient(90deg,#00f5ff,#ff00cc);color:white;font-weight:600;margin:6px;transition:.3s}
+.btn:hover{transform:scale(1.05)}
+section{padding:70px 20px;text-align:center}
+.packs{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;max-width:1200px;margin:50px auto}
+@media(max-width:1000px){.packs{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.packs{grid-template-columns:1fr}}
+.card{background:#151530;padding:30px;border-radius:20px;border:1px solid #222}
+.price{color:#00f5ff;margin:10px 0;font-size:18px}
+.instructions{background:#111122;padding:30px;border-radius:20px;max-width:800px;margin:30px auto;border:1px solid #222}
+footer{text-align:center;padding:40px;background:#111122;border-top:1px solid #222;margin-top:60px}
+a{color:#00f5ff;text-decoration:none}
+.admin-panel{display:none;margin-top:20px}
+input{padding:10px;border-radius:10px;border:none;margin:5px}
+</style>
+</head>
+<body><header>
+<div class="logo">NeonSound Studios 🎧</div>
+<nav>
+<a href="#shop">Shop</a>
+<a href="#payment">Payment</a>
+<a href="#contact">Contact</a>
+</nav>
+</header><section class="hero">
+<h1>Premium FL Studio Sound Packs</h1>
+<p>Industry Quality • Instant Delivery After Confirmation</p>
+<button class="btn" onclick="scrollToShop()">Browse Packs</button>
+</section><section id="shop">
+<h2>🔥 Sound Packs</h2>
+<div class="packs" id="packs"></div>
+</section><section id="payment">
+<h2>💳 Payment Instructions</h2>
+<div class="instructions">
+<p><strong>Option 1: Airtime Transfer</strong></p>
+<p>Send airtime to: <strong>YOUR_PHONE_NUMBER_HERE</strong></p>
+<p>Email proof to: <strong>happymahappen101@gmail.com</strong></p>
+<br>
+<p><strong>Option 2: WhatsApp Proof</strong></p>
+<p>
+<a href="https://wa.me/27YOURNUMBER" target="_blank">Click here to send proof on WhatsApp</a>
+</p>
+<br>
+<p><strong>Option 3: PayFast (Recommended)</strong></p>
+<p>Add your PayFast payment link below:</p>
+<p><a href="#" target="_blank">Insert Your PayFast Link Here</a></p>
+<br>
+<p>⬇️ Download link will be sent after payment confirmation.</p>
+</div>
+</section><section id="contact">
+<h2>📩 Contact</h2>
+<p>Email: <a href="mailto:happymahappen101@gmail.com">happymahappen101@gmail.com</a></p>
+</section><section>
+<h2>🔒 Admin Unlock Panel</h2>
+<button class="btn" onclick="toggleAdmin()">Admin Login</button>
+<div class="admin-panel" id="adminPanel">
+<input type="password" id="adminPass" placeholder="Enter Admin Password">
+<button class="btn" onclick="unlockDownloads()">Unlock All Downloads</button>
+</div>
+</section><footer>
+© 2026 NeonSound Studios<br>
+Secure Digital Delivery • Powered by NeonSound
+</footer><script>
+const packs=[
+"Midnight Trap Kit",
+"ColorWave Melodies",
+"Neon 808 Empire",
+"Future Bounce Drums",
+"Vibe Melody Vault",
+"808 Kings Pack"
+];
+
+let unlocked = false;
+
+const container=document.getElementById("packs");
+
+packs.forEach((name,index)=>{
+const card=document.createElement("div");
+card.className="card";
+card.innerHTML=`
+<h3>${name}</h3>
+<div class="price">Premium Pack</div>
+<button class="btn buy-btn" onclick="handleAction(${index})">Buy Now</button>
+`;
+container.appendChild(card);
+});
+
+function handleAction(index){
+if(unlocked){
+window.location.href = "downloads/pack" + (index+1) + ".zip";
+}else{
+alert("Complete payment first. See Payment section.");
+}
+}
+
+function scrollToShop(){
+document.getElementById('shop').scrollIntoView({behavior:'smooth'});
+}
+
+function toggleAdmin(){
+document.getElementById('adminPanel').style.display='block';
+}
+
+function unlockDownloads(){
+const pass=document.getElementById('adminPass').value;
+if(pass==="abutieymahappen"){
+unlocked = true;
+
+document.querySelectorAll('.buy-btn').forEach((btn,i)=>{
+btn.textContent = "Download";
+});
+
+alert("Downloads Unlocked - Buttons Updated");
+}else{
+alert("Wrong Password");
+}
+}
+</script></body>
+</html>
