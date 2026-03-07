@@ -141,6 +141,45 @@ z-index:9999
 
 <body>
   
+  <div id="downloadOverlay" style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.9);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:99999;
+flex-direction:column;
+color:white;
+font-family:Poppins;
+">
+
+<h2 style="margin-bottom:20px;">Preparing Download...</h2>
+
+<div style="
+width:300px;
+height:12px;
+background:#222;
+border-radius:10px;
+overflow:hidden;
+">
+
+<div id="progressBar" style="
+width:0%;
+height:100%;
+background:linear-gradient(90deg,#00f5ff,#ff00cc);
+transition:width .2s;
+"></div>
+
+</div>
+
+<p id="progressText" style="margin-top:10px;font-size:14px;">0%</p>
+
+</div>
+  
   <div id="liveSale" style="
 position:fixed;
 bottom:20px;
@@ -286,6 +325,9 @@ Fast response • Packs unlocked quickly
 
 <input type="password" id="adminPass" placeholder="Admin Password">
 <button class="btn" onclick="unlockDownloads()">Unlock Pack</button>
+<button class="btn" onclick="resetUnlocks()" style="background:#ff4444">
+Reset Unlocks
+</button>
 
 <div id="proStats" style="
 margin-top:15px;
@@ -331,7 +373,7 @@ Used in Amapiano, Trap, Afro Pop, Lekompo & more beats.
 
 const packs = [
 
-{ name:"🎁 Free Starter Pack", price:"FREE", free:true, url:"https://drive.google.com/file/d/1dwh8Bg28D8OVa-geaN4l_V7Tu6EMmtTE/view?usp=drivesdk" },
+{ name:"🎁 Free Starter Pack", price:"FREE", free:true, url:"htttps://drive.google.com/file/d/1dwh8Bg28D8OVa-geaN4l_V7Tu6EMmtTE/view?usp=drivesdk" },
 
 { name:"Midnight Trap Kit", price:"R49", best:true, url:"PUT_TRAP_LINK_HERE" },
 
@@ -358,46 +400,54 @@ const packs = [
 { name:"Guitar Loop Pack", price:"R45", best:true, url:"PUT_GUITAR_LINK_HERE" }
 
 ];
-function unlockDownloads(){
-
-const pass=document.getElementById("adminPass").value;
-
-if(pass==="abutiieymahappen²⁰²⁶"){
-
-let packNumber=prompt("Enter pack number to unlock (2-13):");
-
-if(packNumber>=2 && packNumber<=13){
-
-let index=packNumber-1;
-
-if(!unlockedPacks.includes(index)){
-
-unlockedPacks.push(index);
-
-localStorage.setItem("unlockedPacks",JSON.stringify(unlockedPacks));
-
-location.reload();
-
-}else{
-
-alert("Pack already unlocked");
-
+function unlockDownloads() {
+  
+  const pass = document.getElementById("adminPass").value;
+  
+  if (pass === "abutieymahappen²⁰²⁶") {
+    
+    let packNumber = prompt("Enter pack number to unlock (2-13):");
+    
+    if (packNumber === null) return; // user pressed cancel
+    
+    packNumber = parseInt(packNumber);
+    
+    if (!isNaN(packNumber) && packNumber >= 2 && packNumber <= 13) {
+      
+      let index = packNumber - 1;
+      
+      /* make sure unlockedPacks exists */
+      let unlockedPacks = JSON.parse(localStorage.getItem("unlockedPacks")) || [];
+      
+      if (!unlockedPacks.includes(index)) {
+        
+        unlockedPacks.push(index);
+        
+        localStorage.setItem("unlockedPacks", JSON.stringify(unlockedPacks));
+        
+        alert("Pack " + packNumber + " unlocked successfully!");
+        
+        location.reload();
+        
+      } else {
+        
+        alert("Pack already unlocked");
+        
+      }
+      
+    } else {
+      
+      alert("Invalid pack number");
+      
+    }
+    
+  } else {
+    
+    alert("Wrong Password");
+    
+  }
+  
 }
-
-}else{
-
-alert("Invalid pack number");
-
-}
-
-}else{
-
-alert("Wrong Password");
-
-}
-
-}
-
 
 /* Hidden admin trigger */
 let tapCount=0;
@@ -428,32 +478,34 @@ tapCount=0;
 
 });
 
-const container=document.getElementById("packs");
+const container = document.getElementById("packs");
 
-let unlockedPacks=JSON.parse(localStorage.getItem("unlockedPacks"))||[];
-let downloadCounts=JSON.parse(localStorage.getItem("downloadCounts"))||{};
+let unlockedPacks = JSON.parse(localStorage.getItem("unlockedPacks")) || [];
+let downloadCounts = JSON.parse(localStorage.getItem("downloadCounts")) || {};
 
 packs.forEach((pack,index)=>{
 
-if(!downloadCounts[index]) downloadCounts[index]=0;
+let isUnlocked = unlockedPacks.includes(index);
 
-const card=document.createElement("div");
-card.className="card";
+if(downloadCounts[index] === undefined){
+downloadCounts[index] = 0;
+}
 
-let isUnlocked=unlockedPacks.includes(index);
+const card = document.createElement("div");
+card.className = "card";
 
-card.innerHTML=`
+card.innerHTML = `
 
 ${pack.premium ? `<div style="position:absolute;top:12px;left:12px;background:silver;color:black;padding:4px 10px;border-radius:10px;font-size:11px;font-weight:600;">💎 PREMIUM</div>`:""}
 
-${pack.best ? `<div style="position:absolute;top:12px;right:12px;background:gold;color:black;padding:4px 10px;border-radius:10px;font-size:11px;font-weight:700;">⭐ BESTSELLER</div>`:""}
+${pack.best ? `<div style="position:absolute;top:12px;right:12px;background:lightblue;color:black;padding:4px 10px;border-radius:10px;font-size:11px;font-weight:700;">⭐ BESTSELLER</div>`:""}
 
 <h3>${pack.name}</h3>
 
 <div class="price">${pack.price}</div>
 
 <p style="font-size:13px;color:#aaa">
-Downloads: ${downloadCounts[index]}
+⬇ ${downloadCounts[index]} downloads
 </p>
 
 <button class="btn" onclick="handleAction(${index})">
@@ -465,7 +517,6 @@ ${pack.free ? "Download" : (isUnlocked ? "Download" : "Buy Now")}
 container.appendChild(card);
 
 });
-
 function handleAction(index){
 
 if(packs[index].free){
@@ -479,7 +530,7 @@ downloadCounts[index]++;
 
 localStorage.setItem("downloadCounts",JSON.stringify(downloadCounts));
 
-window.location.href=packs[index].url;
+startDownload(packs[index].url);
 
 }else{
 
@@ -573,7 +624,74 @@ box.style.display="none";
 }
 
 setInterval(showFakeSale,12000);
+
+function resetUnlocks(){
+
+if(confirm("Reset all unlocked packs?")){
+
+localStorage.removeItem("unlockedPacks");
+
+alert("All packs locked again");
+
+location.reload();
+
+}
+
+}
+
+function startDownload(url){
+
+const overlay = document.getElementById("downloadOverlay");
+const bar = document.getElementById("progressBar");
+const text = document.getElementById("progressText");
+
+overlay.style.display = "flex";
+
+let progress = 0;
+
+const messages = [
+"Connecting to secure server...",
+"Scanning file...",
+"Preparing download...",
+"Compressing pack...",
+"Finalizing download..."
+];
+
+let msgIndex = 0;
+
+let interval = setInterval(()=>{
+
+progress += Math.floor(Math.random()*12)+3;
+
+if(progress >= 100){
+
+progress = 100;
+
+clearInterval(interval);
+
+text.innerText = "Download Ready ✓";
+
+setTimeout(()=>{
+overlay.style.display = "none";
+window.open(url);
+},800);
+
+}
+
+if(progress % 20 === 0 && msgIndex < messages.length){
+text.innerText = messages[msgIndex];
+msgIndex++;
+}else{
+text.innerText = progress + "%";
+}
+
+bar.style.width = progress + "%";
+
+},200);
+
+}
+
 </script>
 
 </body>
-    </html>
+  </html>
